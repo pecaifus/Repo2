@@ -2,3 +2,5 @@
 Vista del entorno
 
 Commit from GitHub
+
+Cambio en RStudio
