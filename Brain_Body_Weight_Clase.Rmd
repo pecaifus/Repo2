@@ -1,0 +1,65 @@
+---
+title: "Relación Peso Cuerpo Cerebro"
+author: "Introducción Ciencia Datos. Master Ciencia Datos."
+date: "11/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Cargar los datos
+
+```{r}
+load(file = "Brain_Body_Weight.RData")
+```
+
+# Exploración de los datos
+
+```{r}
+str(df) #estructura de los datos
+```
+
+## Visualización
+
+```{r}
+plot(df$BRAINWEI,df[,"BODYWEIG"])
+```
+
+```{r}
+plot(log10(df$BRAINWEI),log10(df$BODYWEIG))
+text(log10(df$BRAINWEI),log10(df$BODYWEIG),df$NAME,cex=0.5)
+```
+
+# Relación lineal 
+
+```{r}
+#lm(BRAINWEI~BODYWEIG,data=df) #(A)
+lm(log10(BODYWEIG)~log10(BRAINWEI),data=df) #(B)
+```
+
+```{r}
+plot(log10(df$BRAINWEI),log10(df$BODYWEIG))
+text(log10(df$BRAINWEI),log10(df$BODYWEIG),df$NAME,cex=0.5)
+abline(lm(log10(BODYWEIG)~log10(BRAINWEI),data=df),col="red")
+```
+
+# Relación lineal robusta 
+
+## Encontar los anómalos (outliers) 
+
+Encontrar los dinosarios
+
+```{r}
+scale(df$BODYWEIG) #quita el valor medio / desviación estandard
+df$NAME[abs(scale(df$BODYWEIG))>0.3]
+```
+
+```{r}
+cond<-abs(scale(df$BODYWEIG))<0.3 #no son dinosaurios
+plot(log10(df$BRAINWEI[cond]),log10(df$BODYWEIG[cond]))
+text(log10(df$BRAINWEI[cond]),log10(df$BODYWEIG[cond]),df$NAME[cond],cex=0.5)
+abline(lm(log10(BODYWEIG[cond])~log10(BRAINWEI[cond]),data=df),col="blue")
+```
+
